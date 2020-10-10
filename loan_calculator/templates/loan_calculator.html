@@ -1,0 +1,226 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Loan Calculator</title>
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/bootstrap-theme.min.css' %}">
+  <script src="{% static 'js/jquery.min.js' %}"></script>
+  <script>
+    $(document).ready(function(){
+
+      function check_loan_type(){
+        var loan_term_field = $("#id_loan_term");
+        var loan_term_value = loan_term_field.val()
+        loan_term_field.empty()
+        value_exists = false
+        if($('#id_loan_type').val() == 'type_a'){
+          for (var i = 3; i <= 18; i+=3){
+            loan_term_field.append($("<option></option>").attr("value", i).text(i))
+            if (loan_term_value == i){
+              value_exists = true
+            }
+          }
+          $('#div_id_loan_information').removeAttr('hidden')
+          $('#div_id_monthly_amortization').attr('hidden', 'hidden')
+          $('#div_id_principal_amount').removeAttr('hidden')
+        }
+        else if ($('#id_loan_type').val() == 'type_b'){
+          for (var i = 6; i <= 18; i++){
+            loan_term_field.append($("<option></option>").attr("value", i).text(i))
+            if (loan_term_value == i){
+              value_exists = true
+            }
+          }
+          $('#div_id_loan_information').removeAttr('hidden')
+          $('#div_id_monthly_amortization').removeAttr('hidden')
+          $('#div_id_principal_amount').attr('hidden', 'hidden')
+        }
+        else{
+          $('#div_id_loan_information').attr('hidden', 'hidden')
+        }
+        if (value_exists){
+          loan_term_field.val(loan_term_value)
+        }
+      }
+      check_loan_type()
+      $('#id_loan_type').on('change', function(e){
+        check_loan_type()
+      })
+    })
+  </script>
+  <style>
+    body {
+      margin: 0;
+    }
+    .header {
+      overflow: hidden;
+      background-color: #2F4F4F;
+      color: white;
+    }
+    #id_first_name, #id_middle_name, #id_last_name, #id_name_suffix {
+      width: 25%;
+    }
+    .form-margin{
+      margin-bottom: 1%;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class='header'>
+      <div style="text-align: center;">
+        <h2>Loan Calculator</h2>
+      </div>
+    </div>
+  </header>
+  <div class='container' style='margin-top: 1%;'>
+    <form method='POST' class="form-horizontal"> {% csrf_token %}
+      <div class='form-group'>
+
+        <div class='row form-margin'>
+          <div class='col-md-3' style="text-align: right; margin-top: 0.5%;">
+            <label>Full Name:</label>
+          </div>
+          <div class='col-md-9'>
+            <div class='input-group' style="width: 100%;">
+              {{ form.last_name }}
+              {{ form.first_name }}
+              {{ form.middle_name }}
+              {{ form.name_suffix }}
+            </div>
+          </div>
+        </div>
+
+        <div class='row form-margin'>
+          <div class='col-md-3' style="text-align: right; margin-top: 0.5%;">
+            <label for="id_loan_type">{{ form.email.label }}:</label>
+          </div>
+          <div class='col-md-9'>
+            {{ form.email }}
+            {{ form.email.errors }}
+          </div>
+        </div>
+
+        <div class='row form-margin'>
+          <div class='col-md-3' style="text-align: right; margin-top: 0.5%;">
+            <label for="phone_number">{{ form.phone_number.label }}:</label>
+          </div>
+          <div class='col-md-9'>
+            {{ form.phone_number }}
+            {{ form.phone_number.errors }}
+          </div>
+        </div>
+
+        <div class='row form-margin'>
+          <div class='col-md-3' style="text-align: right; margin-top: 0.5%;">
+            <label for="city">{{ form.city.label }}:</label>
+          </div>
+          <div class='col-md-9'>
+            {{ form.city }}
+            {{ form.city.errors }}
+          </div>
+        </div>
+
+        <div class='row form-margin'>
+          <div class='col-md-3' style="text-align: right; margin-top: 0.5%;">
+            <label for="province">{{ form.province.label }}:</label>
+          </div>
+          <div class='col-md-9'>
+            {{ form.province }}
+            {{ form.province.errors }}
+          </div>
+        </div>
+
+        <div class='row form-margin'>
+          <div class='col-md-3' style="text-align: right; margin-top: 0.5%;">
+            <label for="loan_type">{{ form.loan_type.label }}:</label>
+          </div>
+          <div class='col-md-9'>
+            {{ form.loan_type }}
+            {{ form.loan_type.errors }}
+          </div>
+        </div>
+        <div id='div_id_loan_information'>
+          <div class='row form-margin' id='div_id_principal_amount'>
+            <div class='col-md-3' style="text-align: right; margin-top: 0.5%;">
+              <label for="principal_amount">{{ form.principal_amount.label }}:</label>
+            </div>
+            <div class='col-md-9'>
+              {{ form.principal_amount }}
+              {{ form.principal_amount.errors }}
+            </div>
+          </div>
+
+          <div class='row form-margin' id='div_id_monthly_amortization'>
+            <div class='col-md-3' style="text-align: right; margin-top: 0.5%;">
+              <label for="monthly_amortization">{{ form.monthly_amortization.label }}:</label>
+            </div>
+            <div class='col-md-9'>
+              {{ form.monthly_amortization }}
+              {{ form.monthly_amortization.errors }}
+            </div>
+          </div>
+
+          <div class='row form-margin'>
+            <div class='col-md-3' style="text-align: right; margin-top: 0.5%;">
+              <label for="loan_term">{{ form.loan_term.label }}:</label>
+
+            </div>
+            <div class='col-md-9'>
+              {{ form.loan_term }}
+              {{ form.loan_term.errors }}
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary pull-right">Calculate</button>
+        <a type="button" class="btn btn-default pull-right" href="{% url 'loan_calculator_url' %}" style='margin-right: 1%;'>New</a>
+      </div>
+    </form>
+    {% if object %}
+      <div class='row'>
+        <div class='col-md-3'></div>
+        <div class='col-md-6'>
+          <table class='table table-striped'>
+            <thead>
+              <th>Description</th>
+              <th>Details</th>
+            </thead>
+            <tbody>
+              <tr>
+                <th>Principal Amount</th>
+                <td>{{ object.principal_amount }}</td>
+              </tr>
+              <tr>
+                <th>Monthly Amortization</th>
+                <td>{{ object.monthly_amortization }}</td>
+              </tr>
+              <tr>
+                <th>Total Interest</th>
+                <td>{{ object.total_interest }}</td>
+              </tr>
+              <tr>
+                <th>Loan Term</th>
+                <td>{{ object.loan_term }}</td>
+              </tr>
+              <tr>
+                <th>Total Sum of Payments upon loan maturity</th>
+                <td>{{ object.total_sum_of_payments }}</td>
+              </tr>
+              <tr>
+                <th>First Loan Payment Date</th>
+                <td>{{ object.first_loan_payment_date }}</td>
+              </tr>
+              <tr>
+                <th>Loan Maturity Date</th>
+                <td>{{ object.loan_maturity_date }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class='col-md-3'></div>
+      </div>
+    {% endif %}
+  </div>
+</body>
+</html>
