@@ -5,3 +5,4 @@ phonenumbers
 djangorestframework~=3.11.1
 python-dateutil
 requests
+simplejson
